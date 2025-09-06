@@ -1,0 +1,120 @@
+ const scoreDiv = document.getElementById('score');
+const clickerElem = document.getElementById('clicker');
+const clickerContainer = document.getElementById('clickerContainer');
+const limitBar = document.getElementById('limitBar');
+const doubleAlert = document.getElementById('doubleAlert');
+const sellAlert = document.getElementById('sellAlert');
+
+clickerElem.addEventListener('click', () => {
+    if(limit > 0){
+        clickers += clickValue;
+        limit--;
+        updateLimit();
+        updateColor();
+        showPlusOne();
+        updateScore();
+        // Orqaga borib kelish animatsiyasi
+        clickerElem.style.animation = 'bounce 0.2s';
+        setTimeout(()=> clickerElem.style.animation = '', 200);
+    } else {
+        doubleAlert.style.color = 'red';
+        doubleAlert.innerText = 'Limit tugadi!';
+    }
+});
+
+function showPlusOne() {
+    const plus = document.createElement('div');
+    plus.classList.add('plusOne');
+    plus.innerText = '+1';
+    const x = Math.random() * 150;
+    const y = Math.random() * 150;
+    plus.style.left = x + 'px';
+    plus.style.top = y + 'px';
+    clickerContainer.appendChild(plus);
+    setTimeout(() => plus.remove(), 1000);
+}
+
+function updateScore(){
+    scoreDiv.innerText = ${clickers};
+}
+
+function updateColor(){
+    if(clickers >= 50000){
+        clickerElem.style.backgroundColor = "#b9f2ff"; // diamond
+    } else if(clickers >= 30000){
+        clickerElem.style.backgroundColor = "#ffd700"; // tilla
+    } else if(clickers >= 15000){
+        clickerElem.style.backgroundColor = "#c0c0c0"; // kumush
+    } else if(clickers >= 1000){
+        clickerElem.style.backgroundColor = "#cd7f32"; // bronza
+    } else {
+        clickerElem.style.backgroundColor = "#444"; // standart
+    }
+}
+
+function togglePanel(panelId){
+    const panel = document.getElementById(panelId);
+    if(panel.style.display === 'block'){
+        panel.style.display = 'none';
+    } else {
+        panel.style.display = 'block';
+    }
+}
+
+function calculateDollar(){
+    const input = document.getElementById('clickerInput').value;
+    const dollarValue = input * 0.5;
+    document.getElementById('dollarValue').innerText = dollarValue.toFixed(2);
+}
+
+function buyDoubleClick(){
+    if(clickers >= 150){
+        clickers -= 150;
+        clickValue *=2;
+        doubleActive = true;
+        doubleAlert.style.color = 'green';
+        doubleAlert.innerText = '2x aktiv 30s davomida!';
+        updateScore();
+        setTimeout(()=>{
+            clickValue /=2;
+            doubleActive = false;
+            doubleAlert.innerText='';
+        },30000);
+    } else {
+        doubleAlert.style.color = 'red';
+        doubleAlert.innerText = 'Click yetarli emas!';
+    }
+}
+
+function increaseLimit(){
+    if(clickers >= 250){
+        clickers -= 250;
+        limit += 500;
+        doubleAlert.style.color = 'green';
+        doubleAlert.innerText = 'Limit oshirildi!';
+        updateScore();
+        updateLimit();
+    } else {
+        doubleAlert.style.color = 'red';
+        doubleAlert.innerText = 'Click yetarli emas!';
+    }
+}
+
+function updateLimit(){
+    limitBar.style.width = Math.min((limit/1000)*100,100) + '%';
+    limitBar.innerText = ${limit}/1000;
+}
+
+// Limit asta-sekin tiklanadi
+setInterval(()=>{
+    if(limit < 1000){
+        limit++;
+        updateLimit();
+    }
+}, 1000);
+
+function sellClickers(){
+    sellAlert.style.color = 'red';
+    sellAlert.innerText = 'Tez orada sotish imkoniyati paydo bo‘ladi';
+}
+</script>
